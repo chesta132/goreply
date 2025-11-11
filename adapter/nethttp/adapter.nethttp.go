@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/chesta132/reply-go/adapter"
+	"github.com/chesta132/goreply/adapter"
 )
 
 // netHttpAdapter wraps net/http ResponseWriter to implement adapter.Adapter.
@@ -128,10 +128,10 @@ func (a *netHttpAdapter) StreamSender(statusCode int, contentType string, reader
 // RedirectSender sends a redirect response.
 //
 // Please use reply to handle this sender.
-// 
+//
 // Example:
-// 
-// 	a.RedirectSender(http.StatusMovedPermanently, "https://github.com/chesta132")
+//
+//	a.RedirectSender(http.StatusMovedPermanently, "https://github.com/chesta132")
 func (a *netHttpAdapter) RedirectSender(statusCode int, url string) {
 	http.Redirect(a.w, a.r, url, statusCode)
 }

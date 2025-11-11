@@ -3,7 +3,7 @@ package reply
 import (
 	"io"
 
-	"github.com/chesta132/reply-go/adapter"
+	"github.com/chesta132/goreply/adapter"
 )
 
 // Pagination holds pagination metadata, embedded in Meta when needed.

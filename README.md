@@ -13,20 +13,20 @@ A lightweight HTTP response helper library that simplifies response handling acr
 ## Installation
 
 ```bash
-go get github.com/chesta132/reply-go
+go get github.com/chesta132/goreply
 ```
 
 For specific framework adapters:
 
 ```bash
 # Gin
-go get github.com/gin-gonic/gin github.com/chesta132/reply-go/adapter/gin
+go get github.com/gin-gonic/gin github.com/chesta132/goreply/adapter/gin
 
 # Echo
-go get github.com/labstack/echo/v4 github.com/chesta132/reply-go/adapter/echo
+go get github.com/labstack/echo/v4 github.com/chesta132/goreply/adapter/echo
 
 # Fiber
-go get github.com/gofiber/fiber/v2 github.com/chesta132/reply-go/adapter/fiber
+go get github.com/gofiber/fiber/v2 github.com/chesta132/goreply/adapter/fiber
 ```
 
 ## Quick Start
@@ -35,8 +35,8 @@ go get github.com/gofiber/fiber/v2 github.com/chesta132/reply-go/adapter/fiber
 
 ```go
 import (
-    "github.com/chesta132/reply-go/reply"
-    "github.com/chesta132/reply-go/adapter/nethttp"
+    "github.com/chesta132/goreply/reply"
+    "github.com/chesta132/goreply/adapter/nethttp"
 )
 
 var client = reply.NewClient(reply.Client{
@@ -81,7 +81,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 ### With Gin
 
 ```go
-import "github.com/chesta132/reply-go/adapter/gin"
+import "github.com/chesta132/goreply/adapter/gin"
 
 func handler(c *gin.Context) {
     rp := client.New(adapter.AdaptGin(c))
@@ -98,7 +98,7 @@ func handler(c *gin.Context) {
 ### With Echo
 
 ```go
-import "github.com/chesta132/reply-go/adapter/echo"
+import "github.com/chesta132/goreply/adapter/echo"
 
 func handler(c echo.Context) error {
     rp := client.New(adapter.AdaptEcho(c))
@@ -111,7 +111,7 @@ func handler(c echo.Context) error {
 ### With Fiber
 
 ```go
-import "github.com/chesta132/reply-go/adapter/fiber"
+import "github.com/chesta132/goreply/adapter/fiber"
 
 func handler(c *fiber.Ctx) error {
     rp := client.New(adapter.AdaptFiber(c))

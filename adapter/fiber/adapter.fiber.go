@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/chesta132/reply-go/adapter"
+	"github.com/chesta132/goreply/adapter"
 	"github.com/gofiber/fiber/v2"
 )
 

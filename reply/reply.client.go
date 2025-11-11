@@ -1,6 +1,6 @@
 package reply
 
-import "github.com/chesta132/reply-go/adapter"
+import "github.com/chesta132/goreply/adapter"
 
 // Create a new client with given configuration.
 //
