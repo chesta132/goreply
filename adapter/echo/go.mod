@@ -4,7 +4,7 @@ go 1.25.0
 
 require github.com/labstack/echo/v4 v4.13.4
 
-require github.com/chesta132/goreply v0.0.5
+require github.com/chesta132/goreply v0.0.6
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
