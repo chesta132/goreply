@@ -27,7 +27,7 @@ func NewClient(config Client) *Client {
 // 		// ...
 // 		rp.Success(datas).OkJSON()
 func (c *Client) New(adapter adapter.Adapter) *Reply {
-	rp := &Reply{a: adapter, c: c}
+	rp := &Reply{a: adapter, c: c, m: &ReplyEnvelope{}}
 	if c.DefaultHeaders != nil {
 		for k, v := range c.DefaultHeaders {
 			rp.a.Header().Set(k, v)
