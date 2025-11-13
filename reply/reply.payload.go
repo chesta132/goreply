@@ -32,6 +32,12 @@ func (r *Reply) Error(code, message string, optional ...OptErrorPayload) *Reply 
 	return r
 }
 
+// Info sets info to reply meta information.
+func (r *Reply) Info(information string) *Reply {
+	r.m.Meta.Info = information
+	return r
+}
+
 // Envelope returns a copy of the internal envelope.
 // Modifying the returned value does not affect the original.
 func (r *Reply) Envelope() ReplyEnvelope {

@@ -383,6 +383,7 @@ client := reply.NewClient(reply.Client{
 - `NewClient(config Client)` - Create a new client with configuration
 - `Success(data any)` - Set success response
 - `Error(code, message string, opt ...OptErrorPayload)` - Set error response
+- `Info(information string)` - Set meta information
 - `PaginateTotal(limit, offset, total int)` - Add pagination information with total based
 - `PaginateCursor(limit, offset int)` - Add pagination information with cursor based
 - `Defer(funcs ...func())` - Register functions to execute before sending response
