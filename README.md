@@ -391,30 +391,30 @@ client := reply.NewClient(reply.Client{
 
 ### Response Methods
 
-| Method                  | Status Code | Format |
-| ----------------------- | ----------- | ------ |
-| `NoContent()`           | 204         | -      |
-| `Redirect()`            | Custom      | -      |
-| `ReplyJSON()`           | Custom      | JSON   |
-| `OkJSON()`              | 200         | JSON   |
-| `CreatedJSON()`         | 201         | JSON   |
-| `FailJSON(code ...int)` | Custom/500  | JSON   |
-| `ReplyXML()`            | Custom      | XML    |
-| `OkXML()`               | 200         | XML    |
-| `CreatedXML()`          | 201         | XML    |
-| `FailXML(code ...int)`  | Custom/500  | XML    |
-| `ReplyText()`           | Custom      | Text   |
-| `OkText()`              | 200         | Text   |
-| `CreatedText()`         | 201         | Text   |
-| `ReplyHTML()`           | Custom      | HTML   |
-| `OkHTML()`              | 200         | HTML   |
-| `CreatedHTML()`         | 201         | HTML   |
-| `ReplyBinary()`         | Custom      | Binary |
-| `OkBinary()`            | 200         | Binary |
-| `CreatedBinary()`       | 201         | Binary |
-| `ReplyStream()`         | Custom      | Stream |
-| `OkStream()`            | 200         | Stream |
-| `CreatedStream()`       | 201         | Stream |
+| Method                  | Status Code | Format | Returns |
+| ----------------------- | ----------- | ------ | ------- |
+| `NoContent()`           | 204         | -      | -       |
+| `Redirect()`            | Custom      | -      | -       |
+| `ReplyJSON()`           | Custom      | JSON   | error   |
+| `OkJSON()`              | 200         | JSON   | error   |
+| `CreatedJSON()`         | 201         | JSON   | error   |
+| `FailJSON(code ...int)` | Custom/500  | JSON   | error   |
+| `ReplyXML()`            | Custom      | XML    | error   |
+| `OkXML()`               | 200         | XML    | error   |
+| `CreatedXML()`          | 201         | XML    | error   |
+| `FailXML(code ...int)`  | Custom/500  | XML    | error   |
+| `ReplyText()`           | Custom      | Text   | error   |
+| `OkText()`              | 200         | Text   | error   |
+| `CreatedText()`         | 201         | Text   | error   |
+| `ReplyHTML()`           | Custom      | HTML   | error   |
+| `OkHTML()`              | 200         | HTML   | error   |
+| `CreatedHTML()`         | 201         | HTML   | error   |
+| `ReplyBinary()`         | Custom      | Binary | error   |
+| `OkBinary()`            | 200         | Binary | error   |
+| `CreatedBinary()`       | 201         | Binary | error   |
+| `ReplyStream()`         | Custom      | Stream | error   |
+| `OkStream()`            | 200         | Stream | error   |
+| `CreatedStream()`       | 201         | Stream | error   |
 
 ## Framework Support
 

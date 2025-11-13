@@ -24,18 +24,20 @@ func (r *Reply) retrieveStatusCode(code ...int) (c int, ok bool) {
 // Validate is reply has already sent.
 // Finalize reply.
 // Send data and make sure it won't send more data.
-func (r *Reply) send(sender func() error, callerSkip int) {
+func (r *Reply) send(sender func() error, callerSkip int) error {
 	if r.sent {
-		return
+		return ErrAlreadySent
 	}
 	r.finalize()
 	r.execDefer()
 
 	if err := sender(); err != nil {
 		logError(fmt.Errorf("ERROR WHILE REPLYING\n%v", err), callerSkip+1)
+		return err
 	}
 
 	r.sent = true
+	return nil
 }
 
 // Finalize reply by execute finalizer config and transform the payload
