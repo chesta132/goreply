@@ -13,8 +13,8 @@ func (r *Reply) retrieveStatusCode(code ...int) (c int, ok bool) {
 		return code[0], true
 	}
 	d, ok := r.m.Data.(ErrorPayload)
-	if r.c.codeAliases != nil && ok {
-		if code, exists := r.c.codeAliases[d.Code]; exists {
+	if r.c.CodeAliases != nil && ok {
+		if code, exists := r.c.CodeAliases[d.Code]; exists {
 			return code, true
 		}
 	}
@@ -42,12 +42,12 @@ func (r *Reply) send(sender func() error, callerSkip int) error {
 
 // Finalize reply by execute finalizer config and transform the payload
 func (r *Reply) finalize() {
-	if r.c.finalizer != nil {
-		r.c.finalizer(r)
+	if r.c.Finalizer != nil {
+		r.c.Finalizer(r.m.Data, r.m.Meta)
 	}
 
-	if r.c.transformer != nil {
-		r.Payload = r.c.transformer(r)
+	if r.c.Transformer != nil {
+		r.Payload = r.c.Transformer(r.m.Data, r.m.Meta)
 	} else {
 		r.Payload = &ReplyEnvelope{Meta: r.m.Meta, Data: r.m.Data}
 	}

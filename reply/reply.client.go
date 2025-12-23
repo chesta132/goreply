@@ -6,13 +6,13 @@ import "github.com/chesta132/goreply/adapter"
 //
 // Example:
 //		var Client = reply.NewClient(reply.Client{
-//			finalizer: finalizer,
-// 			transformer: transformer,
-// 			codeAliases: map[string]int{
+//			Finalizer: finalizer,
+// 			Transformer: transformer,
+// 			CodeAliases    map[string]int{
 //				"SERVER_ERROR": 500,
 //				"BAD_REQUEST": 400,
 // 			},
-// 			defaultHeaders map[string]string{
+// 			DefaultHeaders map[string]string{
 // 				"Content-Type": "application/json",
 // 			},
 //		})
@@ -28,8 +28,8 @@ func NewClient(config Client) *Client {
 // 		rp.Success(datas).OkJSON()
 func (c *Client) New(adapter adapter.Adapter) *Reply {
 	rp := &Reply{a: adapter, c: c, m: &ReplyEnvelope{}}
-	if c.defaultHeaders != nil {
-		for k, v := range c.defaultHeaders {
+	if c.DefaultHeaders != nil {
+		for k, v := range c.DefaultHeaders {
 			rp.a.Header().Set(k, v)
 		}
 	}

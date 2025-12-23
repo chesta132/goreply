@@ -40,15 +40,15 @@ import (
 )
 
 var client = reply.NewClient(reply.Client{
-    codeAliases: map[string]int{
+    CodeAliases: map[string]int{
         "NOT_FOUND":    404,
         "BAD_REQUEST":  400,
         "SERVER_ERROR": 500,
     },
-    defaultHeaders: DefaultHeaders{
+    DefaultHeaders: map[string]string{
         "Content-Type": "application/json",
     },
-    paginationType: reply.PaginationPage // default: offset
+    PaginationType: "page" // default: offset
 })
 ```
 
@@ -235,7 +235,7 @@ rp.Defer(
 ```go
 rp.Success(data).OkJSON()           // 200
 rp.Success(data).CreatedJSON()      // 201
-rp.Error("ERR", "msg").FailJSON()   // from codeAliases or 500
+rp.Error("ERR", "msg").FailJSON()   // from CodeAliases or 500
 ```
 
 #### XML
@@ -287,7 +287,7 @@ Transform the response structure before sending:
 
 ```go
 client := reply.NewClient(reply.Client{
-    transformer: func(data any, meta reply.Meta) any {
+    Transformer: func(data any, meta reply.Meta) any {
         return map[string]any{
             "success": meta.Status == "SUCCESS",
             "payload": data,
@@ -303,7 +303,7 @@ Execute custom logic before sending responses:
 
 ```go
 client := reply.NewClient(reply.Client{
-    finalizer: func(data any, meta reply.Meta) {
+    Finalizer: func(data any, meta reply.Meta) {
         // Log response before sending
         log.Printf("Sending response: status=%s", meta.Status)
     },
@@ -316,7 +316,7 @@ Map error codes to HTTP status codes:
 
 ```go
 client := reply.NewClient(reply.Client{
-    codeAliases: map[string]int{
+    CodeAliases: map[string]int{
         "USER_NOT_FOUND":      404,
         "INVALID_CREDENTIALS": 401,
         "RATE_LIMITED":        429,
@@ -335,7 +335,7 @@ Set headers that will be applied to all responses:
 
 ```go
 client := reply.NewClient(reply.Client{
-    defaultHeaders: DefaultHeaders{
+    DefaultHeaders: map[string]string{
         "X-API-Version": "v1.0",
         "X-Powered-By":  "Reply-Go",
     },

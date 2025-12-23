@@ -31,7 +31,7 @@ func (r *Reply) CreatedXML() error {
 }
 
 // FailXML sends a XML response with an error status.
-// If code is provided, use it; otherwise, retrieve from codeAliases
+// If code is provided, use it; otherwise, retrieve from CodeAliases
 // or default to 500.
 func (r *Reply) FailXML(code ...int) error {
 	c, _ := r.retrieveStatusCode(code...)
