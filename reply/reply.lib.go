@@ -43,11 +43,11 @@ func (r *Reply) send(sender func() error, callerSkip int) error {
 // Finalize reply by execute finalizer config and transform the payload
 func (r *Reply) finalize() {
 	if r.c.Finalizer != nil {
-		r.c.Finalizer(r.m.Data, r.m.Meta)
+		r.c.Finalizer(r)
 	}
 
 	if r.c.Transformer != nil {
-		r.Payload = r.c.Transformer(r.m.Data, r.m.Meta)
+		r.Payload = r.c.Transformer(r)
 	} else {
 		r.Payload = &ReplyEnvelope{Meta: r.m.Meta, Data: r.m.Data}
 	}

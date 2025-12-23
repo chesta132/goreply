@@ -15,7 +15,7 @@ func (r *Reply) PaginateTotal(limit, current, total int) *Reply {
 		limit = 1
 	}
 
-	t := strings.ToLower(r.c.PaginationType)
+	t := strings.ToLower(string(r.c.PaginationType))
 	var hasNext bool
 	var next int
 
@@ -52,7 +52,7 @@ func (r *Reply) PaginateCursor(limit, current int) *Reply {
 		limit = 1
 	}
 
-	t := strings.ToLower(r.c.PaginationType)
+	t := strings.ToLower(string(r.c.PaginationType))
 
 	v := reflect.ValueOf(r.m.Data)
 	if v.Kind() != reflect.Slice {
