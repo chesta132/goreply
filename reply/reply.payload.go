@@ -38,6 +38,12 @@ func (r *Reply) Info(information string) *Reply {
 	return r
 }
 
+// Tokens sets tokens to reply meta tokens.
+func (r *Reply) Tokens(tokens Tokens) *Reply {
+	r.m.Meta.Tokens = tokens
+	return r
+}
+
 // Envelope returns a copy of the internal envelope.
 // Modifying the returned value does not affect the original.
 func (r *Reply) Envelope() ReplyEnvelope {

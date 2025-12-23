@@ -52,6 +52,7 @@ type Meta struct {
 	Status     string      `json:"status" xml:"status"`                               // "SUCCESS" or "ERROR"
 	Info       string      `json:"information,omitempty" xml:"information,omitempty"` // Optional info message
 	Pagination *Pagination `json:"pagination,omitempty" xml:"pagination,omitempty"`   // Pagination info if applicable
+	Tokens     Tokens      `json:"tokens,omitempty" xml:"tokens,omitempty"`           // Optional tokens (e.g. auth)
 }
 
 // ReplyEnvelope is the standard API response envelope.
