@@ -6,6 +6,31 @@ import (
 	"github.com/chesta132/goreply/adapter"
 )
 
+// Transformer defines a function to transform the payload before sending.
+type Transformer func(client *Reply) any
+
+// Finalizer defines a function to run before sending the response.
+type Finalizer func(client *Reply)
+
+// CodeAliases maps error codes to HTTP status codes.
+type CodeAliases map[string]int
+
+// DefaultHeaders defines default headers to include in every response.
+type DefaultHeaders map[string]string
+
+// PaginationType defines the pagination strategy.
+type PaginationType string
+
+const (
+	// PaginationPage indicates page-based pagination.
+	PaginationPage PaginationType = "page"
+	// PaginationOffset indicates offset-based pagination.
+	PaginationOffset PaginationType = "offset"
+)
+
+// Tokens holds authentication or session tokens.
+type Tokens map[string]string
+
 // Pagination holds pagination metadata, embedded in Meta when needed.
 //
 // Example:
@@ -74,11 +99,11 @@ type Reply struct {
 
 // Client holds global config for Reply instances.
 type Client struct {
-	Finalizer      func(data any, meta Meta)     // Runs before sending
-	Transformer    func(data any, meta Meta) any // Transforms payload
-	CodeAliases    map[string]int                // Maps error codes to HTTP status
-	DefaultHeaders map[string]string             // Default response headers
-	PaginationType string                        // "page" or "offset". Default: "offset"
+	finalizer      Finalizer      // Runs before sending
+	transformer    Transformer    // Transforms payload
+	codeAliases    CodeAliases    // Maps error codes to HTTP status
+	defaultHeaders DefaultHeaders // Default response headers
+	paginationType PaginationType // "page" or "offset". Default: "offset"
 }
 
 // Stream enables streaming responses (files, SSE, etc.).

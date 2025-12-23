@@ -30,7 +30,7 @@ func (r *Reply) CreatedJSON() error {
 }
 
 // FailJSON sends a JSON response with an error status.
-// If code is provided, use it; otherwise, retrieve from CodeAliases
+// If code is provided, use it; otherwise, retrieve from codeAliases
 // or default to 500.
 func (r *Reply) FailJSON(code ...int) error {
 	c, _ := r.retrieveStatusCode(code...)
