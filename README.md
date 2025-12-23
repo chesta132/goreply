@@ -132,7 +132,7 @@ rp.Error("NOT_FOUND", "User not found").FailJSON()
 // Error with details
 rp.Error("VALIDATION_ERROR", "Invalid input", reply.OptErrorPayload{
     Details: "Email format is invalid",
-    Field:   "email",
+    Fields:   []string{"email"},
 }).FailJSON(400)
 ```
 

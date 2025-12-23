@@ -28,7 +28,7 @@ func (r *Reply) Error(code, message string, optional ...OptErrorPayload) *Reply 
 	if len(optional) > 0 {
 		o = optional[0]
 	}
-	r.setData(ErrorPayload{code, message, o.Details, o.Field})
+	r.setData(ErrorPayload{code, message, o.Details, o.Fields})
 	return r
 }
 

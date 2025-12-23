@@ -71,20 +71,20 @@ type ReplyEnvelope struct {
 //
 //	ErrorPayload{Code: "NOT_FOUND", Message: "User not found"}
 type ErrorPayload struct {
-	Code    string `json:"code" xml:"code"`                           // Machine-readable error code
-	Message string `json:"message" xml:"message"`                     // Human-readable message
-	Details string `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
-	Field   string `json:"field,omitempty" xml:"field,omitempty"`     // Field causing the error (if any)
+	Code    string   `json:"code" xml:"code"`                           // Machine-readable error code
+	Message string   `json:"message" xml:"message"`                     // Human-readable message
+	Details string   `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
+	Fields  []string `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
 }
 
 // OptErrorPayload holds optional error fields for partial errors.
 //
 // Example:
 //
-//	OptErrorPayload{Details: "Invalid email format", Field: "email"}
+//	OptErrorPayload{Details: "Invalid email format", Fields: []string{"email"}}
 type OptErrorPayload struct {
-	Details string `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
-	Field   string `json:"field,omitempty" xml:"field,omitempty"`     // Field causing the error (if any)
+	Details string   `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
+	Fields  []string `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
 }
 
 // Reply is the main HTTP response helper with chained methods.
