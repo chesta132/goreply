@@ -360,7 +360,7 @@ client := reply.NewClient(reply.Client{
         return map[string]any{
             "success": rp.Meta().Status == "SUCCESS",
             "payload": rp.Data(),
-            "timestamp": time.Now().Unix(),
+            "timestamp": rp.Meta().Timestamp,
         }
     },
 })
@@ -419,14 +419,15 @@ client := reply.NewClient(reply.Client{
 {
   "meta": {
     "status": "SUCCESS",
-    "information": "optional info",
+    "timestamp": 1766905701, // unix
+    "information": "optional info", // optional
     "pagination": {
       "Next": 20,
       "hasNext": true
-    }
+    }, // optional
+    "debug": "debug values | omitted if DebugMode is false" // optional
   },
-  "data": "values",
-  "debug": "debug values | omitted if DebugMode is false"
+  "data": "values"
 }
 ```
 
@@ -435,7 +436,10 @@ client := reply.NewClient(reply.Client{
 ```json
 {
   "meta": {
-    "status": "ERROR"
+    "status": "ERROR",
+    "timestamp": 1766905701, // unix
+    "information": "optional info", // optional
+    "debug": "debug values | omitted if DebugMode is false" // optional
   },
   "data": {
     "code": "ERROR_CODE",
@@ -444,8 +448,7 @@ client := reply.NewClient(reply.Client{
     "field": {
       "fieldName": "errorValue"
     }
-  },
-  "debug": "debug values | omitted if DebugMode is false"
+  }
 }
 ```
 
