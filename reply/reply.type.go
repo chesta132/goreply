@@ -37,6 +37,9 @@ type Preset func(rp *Reply, args ...any) *Reply
 // SendPreset defines a function to reuse reply value sender.
 type SendPreset func(rp *Reply, args ...any) error
 
+// FieldsError defines key-value of field-error.
+type FieldsError map[string]string
+
 // Pagination holds pagination metadata, embedded in Meta when needed.
 //
 // Example:
@@ -78,20 +81,20 @@ type ReplyEnvelope struct {
 //
 //	ErrorPayload{Code: "NOT_FOUND", Message: "User not found"}
 type ErrorPayload struct {
-	Code    string   `json:"code" xml:"code"`                           // Machine-readable error code
-	Message string   `json:"message" xml:"message"`                     // Human-readable message
-	Details string   `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
-	Fields  []string `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
+	Code    string      `json:"code" xml:"code"`                           // Machine-readable error code
+	Message string      `json:"message" xml:"message"`                     // Human-readable message
+	Details string      `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
+	Fields  FieldsError `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
 }
 
 // OptErrorPayload holds optional error fields for partial errors.
 //
 // Example:
 //
-//	OptErrorPayload{Details: "Invalid email format", Fields: []string{"email"}}
+//	OptErrorPayload{Details: "Invalid payload format", Fields: FieldsError{"email": "Invalid email format"}}
 type OptErrorPayload struct {
-	Details string   `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
-	Fields  []string `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
+	Details string      `json:"details,omitempty" xml:"details,omitempty"` // Optional debug details
+	Fields  FieldsError `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
 }
 
 // Reply is the main HTTP response helper with chained methods.
