@@ -45,7 +45,8 @@ var client = reply.NewClient(reply.Client{
     DefaultHeaders: map[string]string{
         "Content-Type": "application/json",
     },
-    PaginationType: "page" // default: offset
+    PaginationType: reply.PaginationPage // default: offset
+    DebugMode: os.GetEnv("GO_ENV") != "production"
 })
 ```
 
@@ -128,11 +129,11 @@ func handler(c *fiber.Ctx) error {
 // Simple error
 rp.Error("NOT_FOUND", "User not found").FailJSON()
 
-// Error with details
-rp.Error("VALIDATION_ERROR", "Invalid input", reply.OptErrorPayload{
-    Details: "Email format is invalid",
-    Fields:   []string{"email"},
-}).FailJSON(400)
+// Error with optional values
+rp.Error("VALIDATION_ERROR", "Invalid input",
+    reply.WithDetails("Email format is invalid"),
+    reply.WithFields(FieldsError{"email": "please input a valid email"}),
+).FailJSON(400)
 ```
 
 **Output:**
@@ -143,10 +144,12 @@ rp.Error("VALIDATION_ERROR", "Invalid input", reply.OptErrorPayload{
     "status": "ERROR"
   },
   "data": {
-    "code": "NOT_FOUND",
-    "message": "User not found",
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input",
     "details": "Email format is invalid",
-    "field": "email"
+    "field": {
+      "email": "please input a valid email"
+    }
   }
 }
 ```
@@ -227,6 +230,73 @@ rp.Defer(
 )
 ```
 
+### Preset Functions
+
+```go
+// regist reply value
+Client.AddPreset("RESOURCE_NOT_FOUND", func(rp *Reply, args ...any) *Reply {
+  resource := "resource"
+  if len(args) > 0 {
+    resourceArg, ok := args[0].(string)
+    if ok {
+      resource = resourceArg
+    }
+  }
+
+  return rp.Error("NOT_FOUND", resource+" not found.")
+})
+
+// consume reply value
+rp, exists := rp.UsePreset("RESOURCE_NOT_FOUND", "user")
+if exists {
+  rp.Info("user with id " + userId + " not found").FailJSON()
+} else {
+  rp.Error("NOT_FOUND", "user not found").
+    Info("user with id " + userId + " not found").
+    Debug("preset RESOURCE_NOT_FOUND not found").
+    FailJSON()
+}
+```
+
+```go
+// regist reply sender
+Client.AddSenderPreset("RESOURCE_NOT_FOUND", func(rp *Reply, args ...any) error {
+  resource := "resource"
+  if len(args) > 0 {
+    resourceArg, ok := args[0].(string)
+    if ok {
+      resource = resourceArg
+    }
+  }
+
+  return rp.Error("NOT_FOUND", resource+" not found.").FailJSON()
+})
+
+// consume reply sender
+err := rp.SendPreset("RESOURCE_NOT_FOUND", "user")
+if errors.Is(reply.ErrPresetNotFound) {
+  rp.Error("NOT_FOUND", "user not found.").
+    Debug(err).
+    FailJSON()
+} else {
+  return err
+}
+```
+
+### Reusable instance
+
+```go
+// middleware
+rp := Client.New(adapter.AdaptHttp(w, r))
+// Process middleware...
+rp.SetCookies(cookies...).Debug(len(cookies)+" cookies added")
+
+// Controller
+rp := Client.Use(adapter.AdaptHttp(w, r))
+// Process controller...
+rp.Success(data).OKJSON() // cookies and debug replied
+```
+
 ### Response Formats
 
 #### JSON
@@ -286,10 +356,10 @@ Transform the response structure before sending:
 
 ```go
 client := reply.NewClient(reply.Client{
-    Transformer: func(data any, meta reply.Meta) any {
+    Transformer: func(rp *reply.Reply) any {
         return map[string]any{
-            "success": meta.Status == "SUCCESS",
-            "payload": data,
+            "success": rp.Meta().Status == "SUCCESS",
+            "payload": rp.Data(),
             "timestamp": time.Now().Unix(),
         }
     },
@@ -302,9 +372,9 @@ Execute custom logic before sending responses:
 
 ```go
 client := reply.NewClient(reply.Client{
-    Finalizer: func(data any, meta reply.Meta) {
+    Finalizer: func(rp *reply.Reply) {
         // Log response before sending
-        log.Printf("Sending response: status=%s", meta.Status)
+        log.Printf("Sending response: status=%s", rp.Meta().Status)
     },
 })
 ```
@@ -315,7 +385,7 @@ Map error codes to HTTP status codes:
 
 ```go
 client := reply.NewClient(reply.Client{
-    CodeAliases: map[string]int{
+    CodeAliases: reply.CodeAliases{
         "USER_NOT_FOUND":      404,
         "INVALID_CREDENTIALS": 401,
         "RATE_LIMITED":        429,
@@ -334,7 +404,7 @@ Set headers that will be applied to all responses:
 
 ```go
 client := reply.NewClient(reply.Client{
-    DefaultHeaders: map[string]string{
+    DefaultHeaders: reply.DefaultHeaders{
         "X-API-Version": "v1.0",
         "X-Powered-By":  "Reply-Go",
     },
@@ -355,7 +425,8 @@ client := reply.NewClient(reply.Client{
       "hasNext": true
     }
   },
-  "data": {...}
+  "data": "values",
+  "debug": "debug values | omitted if DebugMode is false"
 }
 ```
 
@@ -370,8 +441,11 @@ client := reply.NewClient(reply.Client{
     "code": "ERROR_CODE",
     "message": "Human readable message",
     "details": "Optional debug info",
-    "field": "fieldName"
-  }
+    "field": {
+      "fieldName": "errorValue"
+    }
+  },
+  "debug": "debug values | omitted if DebugMode is false"
 }
 ```
 
@@ -381,12 +455,13 @@ client := reply.NewClient(reply.Client{
 
 - `NewClient(config Client)` - Create a new client with configuration
 - `Success(data any)` - Set success response
-- `Error(code, message string, opt ...OptErrorPayload)` - Set error response
+- `Error(code, message string, options ...ErrorOption)` - Set error response
 - `Info(information string)` - Set meta information
 - `PaginateTotal(limit, offset, total int)` - Add pagination information with total based
 - `PaginateCursor(limit, offset int)` - Add pagination information with cursor based
 - `Defer(funcs ...func())` - Register functions to execute before sending response
 - `SetCookies(cookies ...http.Cookie)` - Add Set-Cookie header by http.Cookie
+- etc
 
 ### Response Methods
 
@@ -451,8 +526,9 @@ func FindUsers(c *gin.Context) {
 
     users, err := findUsers(tx, payload.Ids, limit+1, offset)
     if err != nil {
-        rp.Error("FIND_FAILED", err.Error()).FailJSON()
+        rp.Error("FIND_FAILED", err.Error()).Debug(err).FailJSON()
         // tx is closed
+        // Webhooks without tx...
         return
     }
 
@@ -470,7 +546,13 @@ func UploadFile(c echo.Context) error {
 
     file, err := c.FormFile("file")
     if err != nil {
-        rp.Error("INVALID_FILE", "No file uploaded").FailJSON(400)
+        rp.
+          Error(
+            "INVALID_FILE",
+            "No file uploaded",
+            reply.WithFields(reply.FieldsError{"file": "please insert a file"}),
+          ).
+          FailJSON()
         return nil
     }
 
@@ -493,7 +575,7 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 
     file, err := os.Open("video.mp4")
     if err != nil {
-        rp.Error("NOT_FOUND", "Video not found").FailJSON(404)
+        rp.Error("NOT_FOUND", "Video not found").FailJSON()
         return
     }
     defer file.Close()
