@@ -31,6 +31,12 @@ const (
 // Tokens holds authentication or session tokens.
 type Tokens map[string]string
 
+// Preset defines a function to reuse reply value.
+type Preset func(rp *Reply, args ...any) *Reply
+
+// SendPreset defines a function to reuse reply value sender.
+type SendPreset func(rp *Reply, args ...any) error
+
 // Pagination holds pagination metadata, embedded in Meta when needed.
 //
 // Example:
@@ -107,6 +113,9 @@ type Client struct {
 	DefaultHeaders DefaultHeaders // Default response headers
 	PaginationType PaginationType // "page" or "offset". Default: "offset"
 	DebugMode      bool           // If true, includes debug info in responses. Default: false
+
+	presets     map[string]Preset     // Registered value presets func map
+	sendPresets map[string]SendPreset // Registered sender presets func map
 }
 
 // Stream enables streaming responses (files, SSE, etc.).

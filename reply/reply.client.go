@@ -34,7 +34,7 @@ func NewClient(config Client) *Client {
 //
 // Example:
 //
-//	rp := Client.New(nethttpadapter.Adapt(w, r))
+//	rp := Client.New(nethttpadapter.AdaptHttp(w, r))
 //	// ...
 //	rp.Success(datas).OkJSON()
 func (c *Client) New(adapter adapter.Adapter) *Reply {
@@ -60,7 +60,7 @@ func (c *Client) New(adapter adapter.Adapter) *Reply {
 //
 // Example:
 //
-//	rp := Client.Use(nethttpadapter.Adapt(w, r))
+//	rp := Client.Use(nethttpadapter.AdaptHttp(w, r))
 //	// ...
 //	rp.Success(datas).OkJSON()
 func (c *Client) Use(adapter adapter.Adapter) *Reply {
