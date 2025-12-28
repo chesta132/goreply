@@ -17,8 +17,8 @@ import (
 //			}
 //		}
 //
-//			return rp.Error("NOT_FOUND", resource+" not found.")
-//		})
+//		return rp.Error("NOT_FOUND", resource+" not found.")
+//	})
 func (r *Client) AddPreset(name string, preset Preset) {
 	r.presets[name] = preset
 }
@@ -36,8 +36,8 @@ func (r *Client) AddPreset(name string, preset Preset) {
 //			}
 //		}
 //
-//			return rp.Error("NOT_FOUND", resource+" not found.").FailJSON()
-//		})
+//		return rp.Error("NOT_FOUND", resource+" not found.").FailJSON()
+//	})
 func (r *Client) AddSenderPreset(name string, preset SendPreset) {
 	r.sendPresets[name] = preset
 }

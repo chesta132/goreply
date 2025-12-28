@@ -50,9 +50,9 @@ func (r *Reply) Tokens(tokens Tokens) *Reply {
 // Debug sets debug messages to envelope.
 func (r *Reply) Debug(messages ...any) *Reply {
 	if len(messages) == 1 {
-		r.m.Debug = messages[0]
+		r.m.Meta.Debug = messages[0]
 	} else if len(messages) > 0 {
-		r.m.Debug = messages
+		r.m.Meta.Debug = messages
 	}
 	return r
 }
@@ -73,12 +73,6 @@ func (r *Reply) Data() any {
 // Modifying the returned value does not affect the original.
 func (r *Reply) Meta() Meta {
 	return r.Envelope().Meta
-}
-
-// GetDebug returns a copy of the debug from internal envelope.
-// Modifying the returned value does not affect the original.
-func (r *Reply) GetDebug() any {
-	return r.Envelope().Debug
 }
 
 // WithDetails returns ErrorOption to build error with details.

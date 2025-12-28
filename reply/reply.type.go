@@ -64,7 +64,9 @@ type Meta struct {
 	Status     string      `json:"status" xml:"status"`                               // "SUCCESS" or "ERROR"
 	Info       string      `json:"information,omitempty" xml:"information,omitempty"` // Optional info message
 	Pagination *Pagination `json:"pagination,omitempty" xml:"pagination,omitempty"`   // Pagination info if applicable
+	Timestamp  int64       `json:"timestamp" xml:"timestamp"`                         // TImestamp of replied time
 	Tokens     Tokens      `json:"tokens,omitempty" xml:"tokens,omitempty"`           // Optional tokens (e.g. auth)
+	Debug      any         `json:"debug,omitempty,omitzero" xml:"debug,omitempty"`    // Optional debug info
 }
 
 // ReplyEnvelope is the standard API response envelope.
@@ -73,9 +75,8 @@ type Meta struct {
 //
 //	ReplyEnvelope{Meta: Meta{Status: "SUCCESS"}, Data: user}
 type ReplyEnvelope struct {
-	Meta  Meta `json:"meta" xml:"meta"`                       // Metadata section
-	Data  any  `json:"data" xml:"data"`                       // Payload data
-	Debug any  `json:"debug,omitempty" xml:"debug,omitempty"` // Optional debug info
+	Meta Meta `json:"meta" xml:"meta"` // Metadata section
+	Data any  `json:"data" xml:"data"` // Payload data
 }
 
 // ErrorPayload defines the error response body.

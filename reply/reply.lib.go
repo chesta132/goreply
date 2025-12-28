@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"runtime"
+	"time"
 )
 
 // Retrieve optional status code or take code alias if status code is empty.
@@ -46,12 +47,14 @@ func (r *Reply) finalize() {
 		r.c.Finalizer(r)
 	}
 
+	r.m.Meta.Timestamp = time.Now().Unix()
+
 	if r.c.Transformer != nil {
 		r.Payload = r.c.Transformer(r)
 	} else {
 		envelope := &ReplyEnvelope{Meta: r.m.Meta, Data: r.m.Data}
 		if r.c.DebugMode {
-			envelope.Debug = r.m.Debug
+			envelope.Meta.Debug = nil
 		}
 		r.Payload = envelope
 	}
