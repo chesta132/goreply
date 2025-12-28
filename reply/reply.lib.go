@@ -43,11 +43,11 @@ func (r *Reply) send(sender func() error, callerSkip int) error {
 
 // Finalize reply by execute finalizer config and transform the payload
 func (r *Reply) finalize() {
+	r.m.Meta.Timestamp = time.Now().Unix()
+
 	if r.c.Finalizer != nil {
 		r.c.Finalizer(r)
 	}
-
-	r.m.Meta.Timestamp = time.Now().Unix()
 
 	if r.c.Transformer != nil {
 		r.Payload = r.c.Transformer(r)
