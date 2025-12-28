@@ -57,8 +57,13 @@ func (r *Reply) finalize() {
 	}
 }
 
+// log with goreply format
+func logGoReply(message string) {
+	log.Printf("[GOREPLY] %s", message)
+}
+
 // Log an error
 func logError(err error, callerSkip int) {
 	_, file, line, _ := runtime.Caller(callerSkip)
-	log.Printf("\n\n\n\n-------------------\n%s:%d\nREPLY-ERROR: %v\n-------------------\n\n\n\n", file, line, err.Error())
+	logGoReply(fmt.Sprintf("%s\n%s:%d", err, file, line))
 }

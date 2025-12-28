@@ -1,7 +1,6 @@
 package reply
 
 import (
-	"log"
 	"os"
 
 	"github.com/chesta132/goreply/adapter"
@@ -36,7 +35,7 @@ func NewClient(config Client) *Client {
 func (c *Client) New(adapter adapter.Adapter) *Reply {
 	rp := &Reply{a: adapter, c: c, m: &ReplyEnvelope{}}
 	if c.DebugMode && os.Getenv("GO_ENV") == "production" {
-		log.Println("[goreply] Warning: DebugMode enabled in production")
+		logGoReply("WARNING: DebugMode enabled in production")
 	}
 	if c.DefaultHeaders != nil {
 		for k, v := range c.DefaultHeaders {
