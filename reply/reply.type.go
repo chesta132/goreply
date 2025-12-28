@@ -61,8 +61,9 @@ type Meta struct {
 //
 //	ReplyEnvelope{Meta: Meta{Status: "SUCCESS"}, Data: user}
 type ReplyEnvelope struct {
-	Meta Meta `json:"meta" xml:"meta"` // Metadata section
-	Data any  `json:"data" xml:"data"` // Payload data
+	Meta  Meta `json:"meta" xml:"meta"`                       // Metadata section
+	Data  any  `json:"data" xml:"data"`                       // Payload data
+	Debug any  `json:"debug,omitempty" xml:"debug,omitempty"` // Optional debug info
 }
 
 // ErrorPayload defines the error response body.
@@ -105,6 +106,7 @@ type Client struct {
 	CodeAliases    CodeAliases    // Maps error codes to HTTP status
 	DefaultHeaders DefaultHeaders // Default response headers
 	PaginationType PaginationType // "page" or "offset". Default: "offset"
+	DebugMode      bool           // If true, includes debug info in responses. Default: false
 }
 
 // Stream enables streaming responses (files, SSE, etc.).

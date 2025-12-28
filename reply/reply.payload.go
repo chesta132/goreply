@@ -44,6 +44,16 @@ func (r *Reply) Tokens(tokens Tokens) *Reply {
 	return r
 }
 
+// Debug sets debug messages to envelope.
+func (r *Reply) Debug(messages ...any) *Reply {
+	if len(messages) == 1 {
+		r.m.Debug = messages[0]
+	} else if len(messages) > 0 {
+		r.m.Debug = messages
+	}
+	return r
+}
+
 // Envelope returns a copy of the internal envelope.
 // Modifying the returned value does not affect the original.
 func (r *Reply) Envelope() ReplyEnvelope {
@@ -60,4 +70,10 @@ func (r *Reply) Data() any {
 // Modifying the returned value does not affect the original.
 func (r *Reply) Meta() Meta {
 	return r.Envelope().Meta
+}
+
+// GetDebug returns a copy of the debug from internal envelope.
+// Modifying the returned value does not affect the original.
+func (r *Reply) GetDebug() any {
+	return r.Envelope().Debug
 }

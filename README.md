@@ -1,4 +1,4 @@
-# Reply-Go
+# GoReply
 
 A lightweight HTTP response helper library that simplifies response handling across multiple Go web frameworks. Write once, run anywhere.
 
@@ -34,10 +34,7 @@ go get github.com/gofiber/fiber/v2 github.com/chesta132/goreply/adapter/fiber
 ### Setup Client
 
 ```go
-import (
-    "github.com/chesta132/goreply/reply"
-    "github.com/chesta132/goreply/adapter/nethttp"
-)
+import "github.com/chesta132/goreply/reply"
 
 var client = reply.NewClient(reply.Client{
     CodeAliases: map[string]int{
@@ -55,6 +52,8 @@ var client = reply.NewClient(reply.Client{
 ### Basic Usage (net/http)
 
 ```go
+import "github.com/chesta132/goreply/adapter/nethttp"
+
 func handler(w http.ResponseWriter, r *http.Request) {
     rp := client.New(adapter.AdaptHttp(w, r))
 
