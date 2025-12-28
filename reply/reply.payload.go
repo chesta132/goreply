@@ -1,5 +1,7 @@
 package reply
 
+import "reflect"
+
 // setStatus sets the "meta.status" field value.
 // Returns the Reply for chaining.
 func (r *Reply) setStatus(status string) *Reply {
@@ -49,10 +51,38 @@ func (r *Reply) Tokens(tokens Tokens) *Reply {
 
 // Debug sets debug messages to envelope.
 func (r *Reply) Debug(messages ...any) *Reply {
-	if len(messages) == 1 {
-		r.m.Meta.Debug = messages[0]
-	} else if len(messages) > 0 {
-		r.m.Meta.Debug = messages
+	if len(messages) == 0 {
+		return r
+	}
+
+	if r.m.Meta.Debug == nil {
+		// set if debug is nil (empty)
+		if len(messages) == 1 {
+			r.m.Meta.Debug = messages[0]
+		} else {
+			r.m.Meta.Debug = messages
+		}
+	} else {
+		// set debug to []any and append messages
+		var debugSlice []any
+
+		rv := reflect.ValueOf(r.m.Meta.Debug)
+
+		// append debugSlice with Meta.Debug
+		if debugs, ok := r.m.Meta.Debug.([]any); ok {
+			debugSlice = debugs
+		} else if rv.Kind() == reflect.Slice {
+			// append to debug slice with loop to prevent nested
+			for i := 0; i < rv.Len(); i++ {
+				debugSlice = append(debugSlice, rv.Index(i).Interface())
+			}
+		} else {
+			debugSlice = []any{r.m.Meta.Debug}
+		}
+
+		// append messages
+		debugSlice = append(debugSlice, messages...)
+		r.m.Meta.Debug = debugSlice
 	}
 	return r
 }
