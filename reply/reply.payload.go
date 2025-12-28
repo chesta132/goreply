@@ -14,7 +14,7 @@ func (r *Reply) setData(data any) *Reply {
 	return r
 }
 
-// Success marks the reply as successful and attaches data.
+// Success sets reply status to "SUCCESS" and attaches data.
 func (r *Reply) Success(data any) *Reply {
 	r.setStatus("SUCCESS")
 	r.setData(data)
@@ -22,13 +22,16 @@ func (r *Reply) Success(data any) *Reply {
 }
 
 // Error sets reply status to "ERROR" and attaches an error payload.
-func (r *Reply) Error(code, message string, optional ...OptErrorPayload) *Reply {
+func (r *Reply) Error(code, message string, options ...ErrorOption) *Reply {
 	r.setStatus("ERROR")
-	o := OptErrorPayload{}
-	if len(optional) > 0 {
-		o = optional[0]
+	payload := ErrorPayload{Code: code, Message: message}
+
+	// set optional values
+	for _, opt := range options {
+		opt(&payload)
 	}
-	r.setData(ErrorPayload{code, message, o.Details, o.Fields})
+
+	r.setData(payload)
 	return r
 }
 
@@ -76,4 +79,18 @@ func (r *Reply) Meta() Meta {
 // Modifying the returned value does not affect the original.
 func (r *Reply) GetDebug() any {
 	return r.Envelope().Debug
+}
+
+// WithDetails returns ErrorOption to build error with details.
+func WithDetails(details string) ErrorOption {
+	return func(ep *ErrorPayload) {
+		ep.Details = details
+	}
+}
+
+// WithFields returns ErrorOption to build error with fields error.
+func WithFields(fields FieldsError) ErrorOption {
+	return func(ep *ErrorPayload) {
+		ep.Fields = fields
+	}
 }
