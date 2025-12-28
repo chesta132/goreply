@@ -125,3 +125,31 @@ func (g *ginAdapter) StreamSender(statusCode int, contentType string, reader io.
 func (a *ginAdapter) RedirectSender(statusCode int, url string) {
 	a.ctx.Redirect(statusCode, url)
 }
+
+// Get read context value.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Get(replyInstance)
+func (a *ginAdapter) Get(key any) (any, bool) {
+	return a.ctx.Get(key)
+}
+
+// Set sets value to request context.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Set(replyInstance, *reply)
+func (a *ginAdapter) Set(key, value any) {
+	a.ctx.Set(key, value)
+}

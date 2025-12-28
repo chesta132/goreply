@@ -142,3 +142,32 @@ func (f *fiberAdapter) StreamSender(statusCode int, contentType string, reader i
 func (a *fiberAdapter) RedirectSender(statusCode int, url string) {
 	a.ctx.Redirect(url, statusCode)
 }
+
+// Get read context value.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Get(replyInstance)
+func (a *fiberAdapter) Get(key any) (any, bool) {
+	value := a.ctx.Locals(key)
+	return value, value != nil
+}
+
+// Set sets value to request context.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Set(replyInstance, *reply)
+func (a *fiberAdapter) Set(key, value any) {
+	a.ctx.Locals(key, value)
+}

@@ -57,4 +57,10 @@ type Adapter interface {
 
 	// Set status code to header
 	SetStatus(statusCode int)
+
+	// Get contexted value
+	Get(key any) (value any, ok bool)
+
+	// Set value to request context
+	Set(key, value any)
 }

@@ -1,6 +1,7 @@
 package adapter
 
 import (
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"io"
@@ -134,4 +135,34 @@ func (a *netHttpAdapter) StreamSender(statusCode int, contentType string, reader
 //	a.RedirectSender(http.StatusMovedPermanently, "https://github.com/chesta132")
 func (a *netHttpAdapter) RedirectSender(statusCode int, url string) {
 	http.Redirect(a.w, a.r, url, statusCode)
+}
+
+// Get read context value.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Get(replyInstance)
+func (a *netHttpAdapter) Get(key any) (any, bool) {
+	value := a.r.Context().Value(key)
+	return value, value != nil
+}
+
+// Set sets value to request context.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Set(replyInstance, *reply)
+func (a *netHttpAdapter) Set(key, value any) {
+	ctx := context.WithValue(a.r.Context(), key, value)
+	a.r = a.r.WithContext(ctx)
 }

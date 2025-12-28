@@ -1,6 +1,7 @@
 package adapter
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -119,4 +120,35 @@ func (e *echoAdapter) StreamSender(statusCode int, contentType string, reader io
 //	a.RedirectSender(http.StatusMovedPermanently, "https://github.com/chesta132")
 func (a *echoAdapter) RedirectSender(statusCode int, url string) {
 	a.ctx.Redirect(statusCode, url)
+}
+
+// Get read context value.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Get(replyInstance)
+func (a *echoAdapter) Get(key any) (any, bool) {
+	k := fmt.Sprintf("%p", key)
+	value := a.ctx.Get(k)
+	return value, value != nil
+}
+
+// Set sets value to request context.
+//
+// Please use reply to handle this sender.
+//
+// Example:
+//
+//	type instance struct{}
+//
+//	var replyInstance instance
+//	a.Set(replyInstance, *reply)
+func (a *echoAdapter) Set(key, value any) {
+	k := fmt.Sprintf("%p", key)
+	a.ctx.Set(k, value)
 }
