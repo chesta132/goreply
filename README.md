@@ -283,11 +283,11 @@ if errors.Is(reply.ErrPresetNotFound) {
 }
 ```
 
-### Reusable instance
+### Reusable Instance
 
 ```go
 // middleware
-rp := Client.New(adapter.AdaptHttp(w, r))
+rp := Client.Use(adapter.AdaptHttp(w, r))
 // Process middleware...
 rp.SetCookies(cookies...).Debug(len(cookies)+" cookies added")
 
