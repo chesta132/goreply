@@ -2,7 +2,6 @@ package reply
 
 import (
 	"reflect"
-	"strings"
 )
 
 // Create pagination information in meta data with total based.
@@ -15,11 +14,11 @@ func (r *Reply) PaginateTotal(limit, current, total int) *Reply {
 		limit = 1
 	}
 
-	t := strings.ToLower(string(r.c.PaginationType))
 	var hasNext bool
 	var next int
 
-	if t == "page" {
+	// calc has next & next value by pagination type
+	if r.c.PaginationType == PaginationPage {
 		totalPages := (total + limit - 1) / limit
 		hasNext = current < totalPages
 		if hasNext {
@@ -52,22 +51,35 @@ func (r *Reply) PaginateCursor(limit, current int) *Reply {
 		limit = 1
 	}
 
-	t := strings.ToLower(string(r.c.PaginationType))
-
 	v := reflect.ValueOf(r.m.Data)
+
+	// returns zero value prevents panic
+	if !v.IsValid() {
+		return r
+	}
+
+	// unwrap value
+	for v.Kind() == reflect.Interface || v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	// guard type
 	if v.Kind() != reflect.Slice {
 		return r
 	}
+
 	dataLen := v.Len()
 	hasNext := dataLen > limit
 
+	// cut data
 	if hasNext {
 		r.m.Data = v.Slice(0, limit).Interface()
 	}
 
+	// set next by pagination type
 	var next int
 	if hasNext {
-		if t == "page" {
+		if r.c.PaginationType == PaginationPage {
 			next = current + 1
 		} else {
 			next = current + limit
