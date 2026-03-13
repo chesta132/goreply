@@ -91,6 +91,10 @@ type ErrorPayload struct {
 	Fields  FieldsError `json:"fields,omitempty" xml:"fields,omitempty"`   // Fields causing the error (if any)
 }
 
+func (e *ErrorPayload) Error() string {
+	return e.Message
+}
+
 // Reply is the main HTTP response helper with chained methods.
 type Reply struct {
 	Payload any // Transformed payload. Only available after reply
